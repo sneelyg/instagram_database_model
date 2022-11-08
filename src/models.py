@@ -5,58 +5,58 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from eralchemy import render_er
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
 
 
-class User(db.Model):
+Base = declarative_base()
+
+class User(Base):
     __tablename__ = 'User'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(250), nullable=False, unique = True)
-    firstname = db.Column(db.String(250), nullable=False)
-    lastname = db.Column(db.String(250), nullable=False)
-    email = db.Column(db.String(250), nullable=False, unique = True)
+    user_id = Column(Integer, primary_key=True)
+    username = Column(String(250), nullable=False, unique = True)
+    firstname = Column(String(250), nullable=False)
+    lastname = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False, unique = True)
 
-class Follower(db.Model):
+class Follower(Base):
     __tablename__ = 'Follower'
     
-    user_from_id = db.Column(db.Integer, ForeignKey ("User.user_id"))
-    user_to_id = db.Column(db.Integer, ForeignKey ("User.user_id"))
+    id = Column(Integer, primary_key=True)
+    user_from_id = Column(Integer, ForeignKey ("User.user_id"))
+    user_to_id = Column(Integer, ForeignKey ("User.user_id"))
    
-    rel_user = db.relationship('User')
+    rel_user = relationship('User')
 
-class Media(db.Model):
+class Media(Base):
     __tablename__ = 'Media'
    
-    ID = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Integer,  nullable=False, unique = False)
-    url = db.Column(db.String(250),  nullable=False, unique = True)
-    post_id = db.Column(db.Integer, ForeignKey ("Post.ID"))  
+    ID = Column(Integer, primary_key=True)
+    type = Column(Integer,  nullable=False, unique = False)
+    url = Column(String(250),  nullable=False, unique = True)
+    post_id = Column(Integer, ForeignKey ("Post.ID"))  
    
-    rel_user = db.relationship('Post')
+    rel_user = relationship('Post')
 
-class Post(db.Model):
+class Post(Base):
     __tablename__ = 'Post'
 
-    ID = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey ("User.user_id"))
+    ID = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey ("User.user_id"))
       
-    rel_user_post = db.relationship('User')
+    rel_user_post = relationship('User')
 
 
-class Comment(db.Model):
+class Comment(Base):
     __tablename__ = 'Comment'
  
-    ID = db.Column(db.Integer, primary_key=True)
-    comment_text = db.Column(db.String(250),  nullable=False, unique = False)
-    author_id = db.Column(db.Integer, ForeignKey ("User.user_id"))
-    post_id = db.Column(db.Integer, ForeignKey ("Post.ID"))  
+    ID = Column(Integer, primary_key=True)
+    comment_text = Column(String(250),  nullable=False, unique = False)
+    author_id = Column(Integer, ForeignKey ("User.user_id"))
+    post_id = Column(Integer, ForeignKey ("Post.ID"))  
    
-    rel_post = db.relationship('Post')
-    rel_user = db.relationship('User')
+    rel_post = relationship('Post')
+    rel_user = relationship('User')
 
 ## Draw from SQLAlchemy base
 try:
